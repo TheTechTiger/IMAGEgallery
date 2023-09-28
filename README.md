@@ -35,7 +35,7 @@ Before you begin, ensure you have met the following requirements:
    git clone https://github.com/your-username/image-gallery.git
    ```
 
-2. Place your image files in the `imgs/` directory within the project. You can organize the images into subdirectories if desired.
+2. Place your image files in the `imgs/` directory within the project.
 
 ## Usage
 
