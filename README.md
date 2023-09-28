@@ -80,10 +80,6 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 
 6. Your pull request will be reviewed, and your changes may be merged into the project.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ---
 
 Enjoy using the Image Gallery Web App! If you encounter any issues or have suggestions for improvements, please feel free to [open an issue](https://github.com/your-username/image-gallery/issues).
