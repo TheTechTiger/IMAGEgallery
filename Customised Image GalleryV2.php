@@ -200,7 +200,7 @@
             loadPage();
         }
 
-        function loadPage(index=0) {
+        function loadPage(index = 0) {
             imageGallery.innerHTML = "";
             pages[index].forEach(url => {
                 LoadImage(url);
@@ -299,6 +299,14 @@
                 ChangeImageViewer(event);
             }
         });
+        document.addEventListener("deviceready", function () {
+            document.addEventListener("backbutton", function () {
+                if (imageViewer.style.display != "none") {
+                    imageViewer.style.display = "none";
+                }
+            }, false);
+        }, false);
+
     </script>
 </body>
 
