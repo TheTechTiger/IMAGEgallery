@@ -119,16 +119,27 @@
             let jsonArray = [];
             for (let index = 0; index < names_ary.length; index++) {
                 name = names_ary[index].replace(/[^a-zA-Z0-9 ]/g, " ").toLowerCase();
-                jsonArray.push({ [names_ary[index]]: name });
+                jsonArray.push([names_ary[index], name]);
             }
             return jsonArray;
         }
+
+        function checkWords(query, str) {
+            let words = query.split(' ');
+            for (let i = 0; i < words.length; i++) {
+                if (!str.includes(words[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     </script>
 </head>
 
 <body>
     <header>
-        <input type="text" id="searchInput" onChange="filterImages(this.value)" placeholder="Search Images">
+        <input type="text" id="searchInput" onChange="filterImages(event.target.value)" placeholder="Search Images">
     </header>
 
     <div class="gallery" id="imageGallery"></div>
@@ -156,7 +167,6 @@
         }
         ?>];
         files = shuffleArray(files);
-        propernames = ProperizeNames(files);
 
         // Initial Load
         for (let index = 0; index < loadBatchSize; index++) {
@@ -170,7 +180,22 @@
 
         // TODO: filterImages
         function filterImages(query) {
-
+            imageGallery.innerHTML = "";
+            if(query==""){
+                LoadNextBatch(files, loadBatchSize);
+                return;
+            }
+            propernames = ProperizeNames(files);
+            filestoshow = [];
+            propernames.forEach(element => {
+                if(checkWords(query, element[1])){
+                    filestoshow.push(element[0]);
+                }
+            });
+            
+            filestoshow.forEach(element => {
+                LoadImage(element);
+            });
         }
 
         function ChangeImageViewer(event, isimage = false) {
@@ -194,15 +219,16 @@
             let imageArray = getImagesOnPage();
             indexOFcurImage = 0;
             imageArray.forEach(function (element, index) {
-                if(displayedImage.src == element.src){
+                if (displayedImage.src == element.src) {
                     indexOFcurImage = index;
                 }
             });
             indexOFcurImage += NEXTimage;
+            // TODO: ADD last image functionality(rev to 1st if no images to load, else load more images)
             if (indexOFcurImage < 0 || indexOFcurImage >= imageArray.length) {
                 return;
             }
-            else{
+            else {
                 UpdateImageViewer(imageArray[indexOFcurImage].src);
             }
         }
@@ -244,7 +270,9 @@
         // Event Listners
         window.onscroll = function (ev) {
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-                LoadNextBatch(files, loadBatchSize);
+                if (document.getElementById("searchInput").value == "") {
+                    LoadNextBatch(files, loadBatchSize);
+                }
             }
         };
 
