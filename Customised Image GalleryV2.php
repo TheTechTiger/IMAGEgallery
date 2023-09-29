@@ -251,12 +251,13 @@
             });
             indexOFcurImage += NEXTimage;
             // TODO: ADD last image functionality(rev to 1st if no images to load, else load more images)
-            if (indexOFcurImage < 0 || indexOFcurImage >= imageArray.length) {
-                return;
+            if (indexOFcurImage < 0) {
+                indexOFcurImage = imageArray.length - 1;
             }
-            else {
-                UpdateImageViewer(imageArray[indexOFcurImage].src);
+            else if (indexOFcurImage >= imageArray.length) {
+                indexOFcurImage = 0;
             }
+            UpdateImageViewer(imageArray[indexOFcurImage].src);
         }
 
         function UpdateImageViewer(url, show = false) {
