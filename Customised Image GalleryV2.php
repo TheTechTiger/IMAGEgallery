@@ -114,14 +114,6 @@
             return array;
         }
 
-        function LoadNextBatch(files, loadBatchSize) {
-            var loadedImages = 0, currentIndex = 0;
-            while (loadedImages < loadBatchSize && currentIndex < files.length) {
-                loadedImages += LoadImage(files[currentIndex]) ? 1 : 0;
-                currentIndex++;
-            }
-        }
-
         function ProperizeNames(names_ary) {
             let jsonArray = [];
             for (let index = 0; index < names_ary.length; index++) {
@@ -165,7 +157,7 @@
         const imageViewer = document.getElementById("imageViewer");
         pages = []
 
-        const loadBatchSize = 5;
+        const loadBatchSize = 2;
         var files = [<?php
         $directory = 'imgs/';
         $files = array_filter(scandir($directory), function ($file) {
@@ -301,8 +293,6 @@
             }
             return false;
         }
-
-        // Event Listners
 
         document.addEventListener("click", function (event) {
             if (imageViewer.style.display != "none" && event.target.id != "displayedImage" && event.target.id == "imageViewer") {
