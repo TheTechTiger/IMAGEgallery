@@ -155,9 +155,10 @@
         const imageGallery = document.getElementById("imageGallery");
         const displayedImage = document.getElementById("displayedImage");
         const imageViewer = document.getElementById("imageViewer");
+        const selectMENU = document.getElementById("PageSelection");
         pages = []
 
-        const loadBatchSize = 2;
+        const loadBatchSize = 100;
         var files = [<?php
         $directory = 'imgs/';
         $files = array_filter(scandir($directory), function ($file) {
@@ -179,7 +180,7 @@
         }
 
         function IndexPages(files) {
-            selectMENU = document.getElementById("PageSelection");
+            
             pages = [];
             curPG = [];
             files.forEach(element => {
@@ -200,7 +201,7 @@
             loadPage();
         }
 
-        function loadPage(index = 0) {
+        function loadPage(index = selectMENU.value) {
             imageGallery.innerHTML = "";
             pages[index].forEach(url => {
                 LoadImage(url);
@@ -250,12 +251,21 @@
                 }
             });
             indexOFcurImage += NEXTimage;
-            // TODO: ADD last image functionality(rev to 1st if no images to load, else load more images)
+
+            // TODO: ADD last image functionality WORK ON The Page Cycleing
             if (indexOFcurImage < 0) {
                 indexOFcurImage = imageArray.length - 1;
             }
             else if (indexOFcurImage >= imageArray.length) {
                 indexOFcurImage = 0;
+                if (selectMENU.value==pages.length) {
+                    return;
+                }
+                else{
+                    selectMENU.value += 1;
+                    loadPage(selectMENU.value);
+                    indexOFcurImage = 0;
+                }
             }
             UpdateImageViewer(imageArray[indexOFcurImage].src);
         }
