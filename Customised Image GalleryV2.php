@@ -35,21 +35,28 @@
             transform: scale(1.05);
         }
 
+        #PageSelection {
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
         #searchInput {
             margin: 10px auto;
             padding: 10px;
-            width: 100%;
-            max-width: 300px;
+            width: 90%;
+            /* max-width: 300px; */
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
-            display: block;
+            align-self: center;
+            justify-self: center;
         }
 
         #searchInput::placeholder {
             color: #999;
         }
-
 
         #imageViewer {
             display: none;
@@ -139,6 +146,8 @@
 
 <body>
     <header>
+        PAGE: <select id="PageSelection" onchange="loadPage(event.target.value)">
+        </select>
         <input type="text" id="searchInput" onChange="filterImages(event.target.value)" placeholder="Search Images">
     </header>
 
@@ -154,8 +163,9 @@
         const imageGallery = document.getElementById("imageGallery");
         const displayedImage = document.getElementById("displayedImage");
         const imageViewer = document.getElementById("imageViewer");
+        pages = []
 
-        const loadBatchSize = 10;
+        const loadBatchSize = 5;
         var files = [<?php
         $directory = 'imgs/';
         $files = array_filter(scandir($directory), function ($file) {
@@ -169,33 +179,57 @@
         files = shuffleArray(files);
 
         // Initial Load
-        for (let index = 0; index < loadBatchSize; index++) {
-            LoadImage(files[index]);
-        }
+        IndexPages(files);
 
         // Functions
         function getImagesOnPage() {
             return Array.from(document.getElementById('imageGallery').querySelectorAll('img'));
         }
 
-        // TODO: filterImages
+        function IndexPages(files) {
+            selectMENU = document.getElementById("PageSelection");
+            pages = [];
+            curPG = [];
+            files.forEach(element => {
+                if (curPG.length >= loadBatchSize) {
+                    pages.push(curPG);
+                    curPG = [];
+                }
+                curPG.push(element);
+            });
+            if (curPG.length > 0) { pages.push(curPG); }
+            selectMENU.innerHTML = "";
+            pages.forEach(function (element, index) {
+                let option = document.createElement("option");
+                option.value = pages.indexOf(element);
+                option.innerHTML = index + 1;
+                selectMENU.appendChild(option);
+            });
+            loadPage();
+        }
+
+        function loadPage(index=0) {
+            imageGallery.innerHTML = "";
+            pages[index].forEach(url => {
+                LoadImage(url);
+            });
+        }
+
         function filterImages(query) {
             imageGallery.innerHTML = "";
-            if(query==""){
-                LoadNextBatch(files, loadBatchSize);
+            if (query == "") {
+                IndexPages(files);
                 return;
             }
             propernames = ProperizeNames(files);
             filestoshow = [];
             propernames.forEach(element => {
-                if(checkWords(query, element[1])){
+                if (checkWords(query, element[1])) {
                     filestoshow.push(element[0]);
                 }
             });
-            
-            filestoshow.forEach(element => {
-                LoadImage(element);
-            });
+
+            IndexPages(filestoshow);
         }
 
         function ChangeImageViewer(event, isimage = false) {
@@ -232,6 +266,7 @@
                 UpdateImageViewer(imageArray[indexOFcurImage].src);
             }
         }
+
         function UpdateImageViewer(url, show = false) {
             displayedImage.src = url;
             if (show) {
@@ -268,13 +303,6 @@
         }
 
         // Event Listners
-        window.onscroll = function (ev) {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-                if (document.getElementById("searchInput").value == "") {
-                    LoadNextBatch(files, loadBatchSize);
-                }
-            }
-        };
 
         document.addEventListener("click", function (event) {
             if (imageViewer.style.display != "none" && event.target.id != "displayedImage" && event.target.id == "imageViewer") {
