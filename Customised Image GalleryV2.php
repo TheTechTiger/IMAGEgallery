@@ -159,7 +159,7 @@
         const selectMENU = document.getElementById("PageSelection");
         pages = []
 
-        const loadBatchSize = 100;
+        const loadBatchSize = 5;
         var files = [<?php
         $directory = 'imgs/';
         $files = array_filter(scandir($directory), function ($file) {
@@ -221,7 +221,6 @@
                     filestoshow.push(element[0]);
                 }
             });
-
             IndexPages(filestoshow);
         }
 
@@ -254,20 +253,28 @@
 
             // TODO: ADD last image functionality WORK ON The Page Cycleing
             if (indexOFcurImage < 0) {
-                indexOFcurImage = imageArray.length - 1;
+                if (selectMENU.value != 0) {
+                    selectMENU.selectedIndex -= 1;
+                    loadPage(selectMENU.value);
+                    indexOFcurImage = getImagesOnPage().length - 1;
+                }
+                else{
+                    alert("You are on the 1st page")
+                    return;
+                }
             }
             else if (indexOFcurImage >= imageArray.length) {
-                indexOFcurImage = 0;
-                if (selectMENU.value==pages.length) {
+                if (selectMENU.value>=pages.length-1) {
+                    alert("You've reached the last page")
                     return;
                 }
                 else{
-                    selectMENU.value += 1;
+                    selectMENU.selectedIndex  += 1;
                     loadPage(selectMENU.value);
                     indexOFcurImage = 0;
                 }
             }
-            UpdateImageViewer(imageArray[indexOFcurImage].src);
+            UpdateImageViewer(getImagesOnPage()[indexOFcurImage].src);
         }
 
         function UpdateImageViewer(url, show = false) {
