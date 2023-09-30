@@ -124,7 +124,8 @@
         }
 
         function checkWords(query, str) {
-            let words = query.split(' ');
+            str = str.toLowerCase();
+            let words = query.toLowerCase().split(' ');
             for (let i = 0; i < words.length; i++) {
                 if (!str.includes(words[i])) {
                     return false;
@@ -180,7 +181,6 @@
         }
 
         function IndexPages(files) {
-            
             pages = [];
             curPG = [];
             files.forEach(element => {
