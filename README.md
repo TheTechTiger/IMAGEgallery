@@ -60,7 +60,7 @@ Contributions are welcome! If you'd like to contribute to this project, please f
 2. Clone your fork locally.
 
    ```shell
-   git clone https://github.com/your-username/image-gallery.git
+   git clone https://github.com/TheTechTiger/IMAGEgallery.git
    ```
 
 3. Create a new branch for your feature or bug fix.
