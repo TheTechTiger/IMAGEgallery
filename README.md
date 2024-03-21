@@ -32,7 +32,7 @@ Before you begin, ensure you have met the following requirements:
 1. Clone or download this repository to your web server directory.
 
    ```shell
-   git clone https://github.com/your-username/image-gallery.git
+   git clone https://github.com/TheTechTiger/IMAGEgallery.git
    ```
 
 2. Place your image files in the `imgs/` directory within the project.
